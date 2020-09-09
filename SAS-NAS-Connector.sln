@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1062
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAS-NAS-Connector", "SAS-NAS-Connector\SAS-NAS-Connector.csproj", "{4D953303-CD32-4DF6-B6AD-C4E38103B69A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D953303-CD32-4DF6-B6AD-C4E38103B69A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D953303-CD32-4DF6-B6AD-C4E38103B69A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D953303-CD32-4DF6-B6AD-C4E38103B69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D953303-CD32-4DF6-B6AD-C4E38103B69A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75EB5751-D228-426C-B4AC-A260346AED36}
+	EndGlobalSection
+EndGlobal
