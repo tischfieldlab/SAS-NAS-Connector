@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SAS_NAS_Connector.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">shell1.sas.rutgers.edu</Value>
+    </Setting>
+    <Setting Name="DefaultShare" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\res1-hill.sas.rutgers.edu\abrairalab</Value>
+    </Setting>
+    <Setting Name="DefaultDrive" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">J:</Value>
+    </Setting>
+    <Setting Name="DefaultPersistance" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

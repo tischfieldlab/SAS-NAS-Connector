@@ -5,8 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SAS_NAS_Connector"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="SAS-NAS Connector" Height="300" Width="350" Icon="RU_SHIELD_CMYK.ico">
+    <Window.Resources>
+        <!-- ValidatingControl Style -->
+        <Style TargetType="{x:Type FrameworkElement}" x:Key="ValidatingControl">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding Path=(Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="85" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="15" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+            <RowDefinition />
+            <RowDefinition Height="15" />
+        </Grid.RowDefinitions>
+
+        <Grid Name="statusPanel" Panel.ZIndex="999" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Grid.RowSpan="15" Visibility="{Binding Path=IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Rectangle Fill="Gray" Opacity="0.9" />
+            <StackPanel VerticalAlignment="Center" Opacity="1">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="20" />
+                <TextBlock Text="{Binding Path=Status}" HorizontalAlignment="Center" Foreground="White" />
+            </StackPanel>
+        </Grid>
+
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="NetID" />
+        <TextBox
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="1"
+            Style="{StaticResource ValidatingControl}"
+            Text="{Binding Path=Username, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="Password" />
+        <PasswordBox 
+            Name="password"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="3" />
+
+        <TextBlock Grid.Column="1" Grid.Row="5" Text="Hostname" />
+        <TextBox
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="5"
+            Style="{StaticResource ValidatingControl}"
+            Text="{Binding Path=Host, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Column="1" Grid.Row="7" Text="Share Location" />
+        <TextBox
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="7"
+            Style="{StaticResource ValidatingControl}"
+            Text="{Binding Path=Share, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Column="1" Grid.Row="9" Text="Mount To" />
+        <ComboBox
+            Style="{StaticResource ValidatingControl}"
+            ItemsSource="{Binding Path=AvailableDrives}"
+            SelectedValue="{Binding Path=MountLocation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="9" />
+
+        <TextBlock Grid.Column="1" Grid.Row="11" Text="Persistant?" />
+        <CheckBox
+            Style="{StaticResource ValidatingControl}"
+            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+            Grid.Column="2" Grid.Row="11" IsChecked="{Binding Path=IsPersistent, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+        <StackPanel Orientation="Horizontal" Grid.Row="13" Grid.Column="2" HorizontalAlignment="Right">
+            <Button Content="Reset" Width="90" Click="Reset_Button_Click" IsCancel="True" />
+            <TextBlock Width="20" />
+            <Button Content="Connect"  Width="90" Click="Connect_Button_Click" IsDefault="True" IsEnabled="{Binding Path=IsValid}" />
+        </StackPanel>
+
     </Grid>
 </Window>
