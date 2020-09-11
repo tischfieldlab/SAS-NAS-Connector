@@ -96,7 +96,8 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Project_Path /p:Configuration=$env:Configuration /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=GitHubActionsWorkflow.pfx
+      run: msbuild $env:Project_Path /p:Configuration=$env:Configuration 
+      #/p:SignAssembly=true /p:AssemblyOriginatorKeyFile=GitHubActionsWorkflow.pfx
       #/p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env: 
         #Appx_Bundle: Always
@@ -104,9 +105,14 @@ jobs:
         #Appx_Package_Build_Mode: StoreUpload
         Configuration: ${{ matrix.configuration }}
 
+    - name: Sign Assembly
+      run: SignTool sign /f GitHubActionsWorkflow.pfx /p ${{ secrets.Pfx_Key }} ${{ env.Project_Directory }}\bin\${{ env.Configuration }}\${{ env.Solution_Name }}
+
     # Remove the pfx
-    #- name: Remove the pfx
-    #  run: Remove-Item -path $env:Project_Directory\$env:Signing_Certificate
+    - name: Remove the pfx
+      run: |
+        $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath GitHubActionsWorkflow.pfx
+        Remove-Item -path "$certificatePath"
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
