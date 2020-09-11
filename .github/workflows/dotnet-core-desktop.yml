@@ -102,7 +102,7 @@ jobs:
         #Appx_Bundle: Always
         #Appx_Bundle_Platforms: x86|x64
         #Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{cd matrix.configuration }}
+        Configuration: ${{ matrix.configuration }}
 
     # Remove the pfx
     #- name: Remove the pfx
