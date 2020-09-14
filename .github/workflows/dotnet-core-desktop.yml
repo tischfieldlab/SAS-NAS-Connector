@@ -109,7 +109,7 @@ jobs:
     - name: Sign Assembly
       shell: cmd
       run: |
-        "${{ env.SignTool_Path }}" sign /tr http://timestamp.sectigo.com/ /f ${{ env.Project_Directory }}\GitHubActionsWorkflow.pfx /p ${{ secrets.Pfx_Key }} ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\${{ env.Solution_Name }}.exe
+        "${{ env.SignTool_Path }}" sign /tr http://timestamp.sectigo.com /td sha256 /f ${{ env.Project_Directory }}\GitHubActionsWorkflow.pfx /p ${{ secrets.Pfx_Key }} ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\${{ env.Solution_Name }}.exe
         "${{ env.SignTool_Path }}" verify /all ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\${{ env.Solution_Name }}.exe
 
     # Remove the pfx
