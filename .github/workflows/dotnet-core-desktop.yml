@@ -60,7 +60,7 @@ jobs:
       #Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Project_Directory: SAS-NAS-Connector                       # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       Project_Path: SAS-NAS-Connector\SAS-NAS-Connector.csproj   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
-      SignTool_Path: C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe
+      SignTool_Path: C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool.exe
 
     steps:
     - name: Checkout
