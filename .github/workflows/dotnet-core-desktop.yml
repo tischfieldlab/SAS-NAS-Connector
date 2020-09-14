@@ -107,7 +107,7 @@ jobs:
         Configuration: ${{ matrix.configuration }}
 
     - name: Sign Assembly
-      run: ${{ env.SignTool_Path }} sign /f GitHubActionsWorkflow.pfx /p ${{ secrets.Pfx_Key }} ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\${{ env.Solution_Name }}.exe
+      run: "${{ env.SignTool_Path }}" sign /f GitHubActionsWorkflow.pfx /p ${{ secrets.Pfx_Key }} ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\${{ env.Solution_Name }}.exe
 
     # Remove the pfx
     - name: Remove the pfx
