@@ -38,7 +38,7 @@ namespace SAS_NAS_Connector
         protected void reset()
         {
             this.DataContext = this.cinfo = new ConnectionViewModel();
-            this.statusPanel.DataContext = this.actor = new ConnectorActor(this.cinfo, this);
+            this.statusPanel.DataContext = this.actor = new ConnectorActor(this.cinfo);
             this.password.Clear();
         }
 

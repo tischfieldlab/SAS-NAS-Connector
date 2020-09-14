@@ -13,15 +13,13 @@ namespace SAS_NAS_Connector
     class ConnectorActor : ObservableObject
     {
         private ConnectionViewModel cinfo;
-        private Window owner;
 
         private bool isBusy;
         private string status;
 
-        public ConnectorActor(ConnectionViewModel ConnectionInfo, Window Owner)
+        public ConnectorActor(ConnectionViewModel ConnectionInfo)
         {
             this.cinfo = ConnectionInfo;
-            this.owner = Owner;
         }
 
         public StepResult Connect(PasswordBox password)
