@@ -109,11 +109,12 @@ namespace SAS_NAS_Connector
         {
             try
             {
+                string persist = this.cinfo.IsPersistent ? "YES" : "NO";
                 Process p = new Process();
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.FileName = "net";
-                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" {password.Password} /USER:RAD\{this.cinfo.Username} /PERSISTENT:YES";
+                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" {password.Password} /USER:RAD\{this.cinfo.Username} /PERSISTENT:{persist}";
                 p.StartInfo.CreateNoWindow = true;
                 p.Start();
                 p.WaitForExit();
