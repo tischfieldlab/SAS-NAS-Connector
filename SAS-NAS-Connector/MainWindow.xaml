@@ -85,7 +85,7 @@
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
             Grid.Column="2" Grid.Row="9" />
 
-        <TextBlock Grid.Column="1" Grid.Row="11" Text="Persistant?" />
+        <TextBlock Grid.Column="1" Grid.Row="11" Text="Persistent?" />
         <CheckBox
             Style="{StaticResource ValidatingControl}"
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
