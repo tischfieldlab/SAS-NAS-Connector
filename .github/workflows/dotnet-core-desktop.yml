@@ -122,13 +122,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.Solution_Name }} - ${{ matrix.configuration }}
-        path: ${{ env.Project_Directory }}\bin\${{ env.Configuration }}\*
+        path: ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\*
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: Documentation
-        path: ${{ env.Project_Directory }}\bin\${{ env.Configuration }}\*.pdf
+        path: ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\*.pdf
 
   release:
     needs: build
