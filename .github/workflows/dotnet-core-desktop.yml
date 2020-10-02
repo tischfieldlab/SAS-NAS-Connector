@@ -116,19 +116,23 @@ jobs:
       run: |
         $certificatePath = Join-Path -Path $env:Project_Directory -ChildPath GitHubActionsWorkflow.pfx
         Remove-Item -path "$certificatePath"
+    
+    - name: Prepare Release Files
+      run: |
+        Compress-Archive -Path ${{ env.Project_Directory }}/bin/${{ matrix.configuration }}/* -DestinationPath ./${{ env.Solution_Name }}_${{ matrix.configuration }}.zip
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.Solution_Name }} - ${{ matrix.configuration }}
-        path: ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\*
+        path: ./${{ env.Solution_Name }}_${{ matrix.configuration }}.zip
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: Documentation
-        path: ${{ env.Project_Directory }}\bin\${{ matrix.configuration }}\*.pdf
+        path: ${{ env.Project_Directory }}/bin/${{ matrix.configuration }}/*.pdf
 
   release:
     needs: build
