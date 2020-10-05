@@ -123,7 +123,6 @@ jobs:
         
     - name: Fetch Version Information
       if: ${{ matrix.configuration }} == Release
-      shell: cmd
       run: |
         $ErrorView = 'NormalView'
         Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" | Write-Host;
