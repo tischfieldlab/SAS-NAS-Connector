@@ -43,7 +43,25 @@ namespace SAS_NAS_Connector.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("J:")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DefaultPersistance {
+            get {
+                return ((bool)(this["DefaultPersistance"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NeedsSSHLogin {
+            get {
+                return ((bool)(this["NeedsSSHLogin"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("T:")]
         public string DefaultDrive {
             get {
                 return ((string)(this["DefaultDrive"]));
@@ -52,10 +70,10 @@ namespace SAS_NAS_Connector.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DefaultPersistance {
+        [global::System.Configuration.DefaultSettingValueAttribute("RAD")]
+        public string Domain {
             get {
-                return ((bool)(this["DefaultPersistance"]));
+                return ((string)(this["Domain"]));
             }
         }
     }

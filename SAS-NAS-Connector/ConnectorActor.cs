@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,13 +37,16 @@ namespace SAS_NAS_Connector
                 return res1;
             }
 
-            // Second we need to SSH into the box to register the credentials
-            this.Status = "Attempting to establish SSH connection...";
-            var res2 = this.AttemptSSHConnection(password);
-            if (res2 is StepErrorResult)
+            if (this.cinfo.NeedsSshLogin)
             {
-                this.IsBusy = false;
-                return res2;
+                // Second we need to SSH into the box to register the credentials
+                this.Status = "Attempting to establish SSH connection...";
+                var res2 = this.AttemptSSHConnection(password);
+                if (res2 is StepErrorResult)
+                {
+                    this.IsBusy = false;
+                    return res2;
+                }
             }
 
             // Third actually try to mount the drive
@@ -52,6 +56,15 @@ namespace SAS_NAS_Connector
             {
                 this.IsBusy = false;
                 return res3;
+            }
+
+            // fourth, test that the share mounted
+            this.Status = "Verifying share mount...";
+            var res4 = this.AttemptTestShareMount();
+            if (res4 is StepErrorResult)
+            {
+                this.IsBusy = false;
+                return res4;
             }
 
             this.Status = string.Empty;
@@ -114,7 +127,7 @@ namespace SAS_NAS_Connector
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.FileName = "net";
-                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" {password.Password} /USER:RAD\{this.cinfo.Username} /PERSISTENT:{persist}";
+                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" {password.Password} /USER:{this.cinfo.Domain}\{this.cinfo.Username} /PERSISTENT:{persist}";
                 p.StartInfo.CreateNoWindow = true;
                 p.Start();
                 p.WaitForExit();
@@ -131,6 +144,23 @@ namespace SAS_NAS_Connector
                 return new StepErrorResult()
                 {
                     Title = "Error mounting share!",
+                    Message = except.Message,
+                };
+            }
+            return new StepSuccessResult();
+        }
+
+        protected StepResult AttemptTestShareMount()
+        {
+            try
+            {
+                var results = Directory.GetFileSystemEntries(this.cinfo.MountLocation);
+            }
+            catch (Exception except)
+            {
+                return new StepErrorResult()
+                {
+                    Title = "Error testing share mount!",
                     Message = except.Message,
                 };
             }

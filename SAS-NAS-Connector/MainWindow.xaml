@@ -63,12 +63,13 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Grid.Column="2" Grid.Row="3" />
 
-        <TextBlock Grid.Column="1" Grid.Row="5" Text="Hostname" />
+        <TextBlock Grid.Column="1" Grid.Row="5" Text="Hostname" Visibility="{Binding Path=NeedsSshLogin, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <TextBox
             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
             Grid.Column="2" Grid.Row="5"
             Style="{StaticResource ValidatingControl}"
-            Text="{Binding Path=Host, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding Path=Host, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="{Binding Path=NeedsSshLogin, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <TextBlock Grid.Column="1" Grid.Row="7" Text="Share Location" />
         <TextBox

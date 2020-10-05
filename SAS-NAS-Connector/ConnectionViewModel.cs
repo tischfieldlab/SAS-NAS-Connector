@@ -13,7 +13,9 @@ namespace SAS_NAS_Connector
     {
         private ObservableCollection<string> _availableDrives = new ObservableCollection<string>();
 
+        private bool shouldPerformSSHLogin = Properties.Settings.Default.NeedsSSHLogin;
         private string username;
+        private string domain = Properties.Settings.Default.Domain;
         private string host = Properties.Settings.Default.DefaultHost;
         private string share = Properties.Settings.Default.DefaultShare;
         private string mountTo;
@@ -24,7 +26,16 @@ namespace SAS_NAS_Connector
             this.AvailableDrives = new ReadOnlyObservableCollection<string>(this._availableDrives);
             this.RequeryDrives();
         }
-        
+
+        public bool NeedsSshLogin
+        {
+            get => this.shouldPerformSSHLogin;
+        }
+        public string Domain
+        {
+            get => this.domain;
+        }
+
         public ReadOnlyObservableCollection<string> AvailableDrives { get; protected set; }
         public string Username
         {
