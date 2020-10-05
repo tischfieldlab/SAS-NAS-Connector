@@ -123,9 +123,15 @@ jobs:
         
     - name: Fetch Version Information
       if: ${{ matrix.configuration }} == Release
+      shell: cmd
+      #run: |
+      #  $ErrorView = 'NormalView'
+      #  #Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" | Write-Host;
+      #  Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" > ./version.txt
       run: |
-        $ErrorView = 'NormalView'
-        Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" | Write-Host;
+        echo on
+        powershell -executionpolicy bypass
+        Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" | Write-Host
         Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" > ./version.txt
     
     - name: Upload build artifacts
