@@ -120,6 +120,18 @@ jobs:
     - name: Prepare Release Files
       run: |
         Compress-Archive -Path ${{ env.Project_Directory }}/bin/${{ matrix.configuration }}/* -DestinationPath ./${{ env.Solution_Name }}_${{ matrix.configuration }}.zip
+        
+    - name: Fetch Version Information
+      if: ${{ matrix.configuration }} == Release
+      run: |
+        Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}.$GITHUB_RUN_ID" > ./version.txt
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ matrix.configuration }} == Release
+      with:
+        name: Version
+        path: ./version.txt
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
@@ -143,6 +155,10 @@ jobs:
     - name: Download Artifacts
       uses: actions/download-artifact@v2
     
+    - name: Read VERSION file
+      id: getversion
+      run: echo "::set-output name=version::$(cat ./${{ env.Project_Directory }}/version.txt)"
+    
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -150,7 +166,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        release_name: Release ${{ steps.getversion.outputs.version }}
         draft: true
         prerelease: false
         
