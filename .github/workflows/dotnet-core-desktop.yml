@@ -124,7 +124,7 @@ jobs:
     - name: Fetch Version Information
       if: ${{ matrix.configuration }} == Release
       run: |
-        Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}.$GITHUB_RUN_ID" > ./version.txt
+        Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}.{$GITHUB_RUN_ID}" > ./version.txt
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
