@@ -124,6 +124,7 @@ jobs:
     - name: Fetch Version Information
       if: ${{ matrix.configuration }} == Release
       run: |
+        $ErrorView = 'NormalView'
         Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" | Write-Host;
         Select-String -Path $env:Project_Path -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}" > ./version.txt
     
