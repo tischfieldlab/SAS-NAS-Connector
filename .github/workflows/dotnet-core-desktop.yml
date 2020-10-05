@@ -157,7 +157,7 @@ jobs:
     
     - name: Read VERSION file
       id: getversion
-      run: echo "::set-output name=version::$(cat ./${{ env.Project_Directory }}/version.txt)"
+      run: echo "::set-output name=version::$(cat ./Version/version.txt)"
     
     - name: Create Release
       id: create_release
