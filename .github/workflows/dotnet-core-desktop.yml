@@ -124,6 +124,7 @@ jobs:
     - name: Fetch Version Information
       if: ${{ matrix.configuration }} == Release
       run: |
+        Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}
         Select-String -Path ${{ env.Project_Path }} -Pattern "<ApplicationVersion>(\d\.\d\.\d)\..+</ApplicationVersion>" | % "{$_.matches.groups[1].value}.{$GITHUB_RUN_ID}" > ./version.txt
     
     - name: Upload build artifacts
@@ -157,7 +158,9 @@ jobs:
     
     - name: Read VERSION file
       id: getversion
-      run: echo "::set-output name=version::$(cat ./Version/version.txt)"
+      run: |
+        echo "::set-output name=version::$(cat ./Version/version.txt)"
+        cat ./Version/version.txt
     
     - name: Create Release
       id: create_release
