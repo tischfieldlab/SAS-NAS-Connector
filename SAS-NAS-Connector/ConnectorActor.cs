@@ -28,43 +28,44 @@ namespace SAS_NAS_Connector
             this.Status = string.Empty;
             this.IsBusy = true;
 
-            // First check if data looks valid!
-            this.Status = "Validating connection information...";
-            var res1 = this.AttemptValidateConnectionInfo();
-            if (res1 is StepErrorResult)
+            var steps = new List<PipelineStep>()
             {
-                this.IsBusy = false;
-                return res1;
-            }
-
-            if (this.cinfo.NeedsSshLogin)
-            {
-                // Second we need to SSH into the box to register the credentials
-                this.Status = "Attempting to establish SSH connection...";
-                var res2 = this.AttemptSSHConnection(password);
-                if (res2 is StepErrorResult)
+                new PipelineStep("Validating connection information...")
                 {
-                    this.IsBusy = false;
-                    return res2;
+                    Implementation = () => this.AttemptValidateConnectionInfo()
+                },
+                new PipelineStep("Attempting to establish SSH connection...")
+                {
+                    Condition = () => this.cinfo.NeedsSshLogin,
+                    Implementation = () => this.AttemptSSHConnection(password)
+                },
+                new PipelineStep("Attempting to store credentials...")
+                {
+                    Implementation = () => this.AttemptStoreCredentials(password)
+                },
+                new PipelineStep("Attempting to mount share...")
+                {
+                    Implementation = () => this.AttemptShareMount(password)
+                },
+                new PipelineStep("Verifying share mount...")
+                {
+                    Implementation = () => this.AttemptTestShareMount()
+                },
+            };
+
+            // run the pipeline steps
+            foreach(var step in steps)
+            {
+                if (step.Condition == null || step.Condition.Invoke())
+                {
+                    this.Status = step.Description;
+                    var result = step.Implementation.Invoke();
+                    if (result is StepErrorResult)
+                    {
+                        this.IsBusy = false;
+                        return result;
+                    }
                 }
-            }
-
-            // Third actually try to mount the drive
-            this.Status = "Attempting to mount share...";
-            var res3 = this.AttemptShareMount(password);
-            if (res3 is StepErrorResult)
-            {
-                this.IsBusy = false;
-                return res3;
-            }
-
-            // fourth, test that the share mounted
-            this.Status = "Verifying share mount...";
-            var res4 = this.AttemptTestShareMount();
-            if (res4 is StepErrorResult)
-            {
-                this.IsBusy = false;
-                return res4;
             }
 
             this.Status = string.Empty;
@@ -118,6 +119,39 @@ namespace SAS_NAS_Connector
             return new StepSuccessResult();
         }
 
+        protected StepResult AttemptStoreCredentials(PasswordBox password)
+        {
+            try
+            {
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.CreateNoWindow = true;
+
+                p.StartInfo.FileName = "cmdkey";
+                p.StartInfo.Arguments = $@" /add:{this.cinfo.ShareHostname} /user:{this.cinfo.Domain}\{this.cinfo.Username} /pass:{password.Password}";
+
+                p.Start();
+                p.WaitForExit();
+                string output = p.StandardOutput.ReadToEnd();
+                if (!output.Trim().Equals("CMDKEY: Credential added successfully."))
+                {
+                    Console.Write(output);
+                    throw new Exception(output);
+                }
+                p.Dispose();
+            }
+            catch (Exception except)
+            {
+                return new StepErrorResult()
+                {
+                    Title = "Saving connection credentials!",
+                    Message = except.Message,
+                };
+            }
+            return new StepSuccessResult();
+        }
+
         protected StepResult AttemptShareMount(PasswordBox password)
         {
             try
@@ -126,9 +160,11 @@ namespace SAS_NAS_Connector
                 Process p = new Process();
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.FileName = "net";
-                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" {password.Password} /USER:{this.cinfo.Domain}\{this.cinfo.Username} /PERSISTENT:{persist}";
                 p.StartInfo.CreateNoWindow = true;
+
+                p.StartInfo.FileName = "net";
+                p.StartInfo.Arguments = $@" use {this.cinfo.MountLocation} ""{this.cinfo.Share}"" /PERSISTENT:{persist}";
+
                 p.Start();
                 p.WaitForExit();
                 string output = p.StandardOutput.ReadToEnd();
@@ -168,6 +204,17 @@ namespace SAS_NAS_Connector
         }
     }
 
+    public class PipelineStep
+    {
+        public PipelineStep() { }
+        public PipelineStep(string Description)
+        {
+            this.Description = Description;
+        }
+        public string Description { get; set; }
+        public Func<StepResult> Implementation { get; set; }
+        public Func<bool> Condition { get; set; }
+    }
 
     public abstract class StepResult { }
     public class StepSuccessResult : StepResult { }

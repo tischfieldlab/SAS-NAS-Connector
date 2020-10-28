@@ -63,6 +63,14 @@ namespace SAS_NAS_Connector
                 this.NotifyPropertyChanged(nameof(this.IsValid));
             }
         }
+        public string ShareHostname
+        {
+            get
+            {
+                Uri.TryCreate(this.Share, UriKind.Absolute, out Uri uri);
+                return uri.Host;
+            }
+        }
 
         public string MountLocation
         {
